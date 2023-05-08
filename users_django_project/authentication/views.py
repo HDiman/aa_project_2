@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -21,7 +21,7 @@ def signup(request):
         myuser.first_name = fname
         myuser.last_name = lname
 
-        # myuser.save()
+        myuser.save()
 
         messages.success(request, 'Your Account has benn successfully created.')
         return redirect('signin')
@@ -47,4 +47,6 @@ def signin(request):
     return render(request, 'authentication/signin.html')
 
 def signout(request):
-    return render(request, 'authentication/signout.html')
+    logout(request)
+    messages.success(request, 'Logged Out Successfully!')
+    return redirect('home')
