@@ -42,7 +42,7 @@ def signin(request):
             return render(request, 'authentication/index.html', {'fname': fname})
         else:
             messages.error(request, 'Bad Credentials!')
-            return redirect('signup')
+            return redirect('home')
 
     return render(request, 'authentication/signin.html')
 
