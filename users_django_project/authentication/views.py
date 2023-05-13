@@ -1,9 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
+from users_django_project import settings
 
 # Create your views here.
+
+
 def home(request):
     return render(request, 'authentication/index.html')
 
@@ -43,6 +47,20 @@ def signup(request):
         myuser.save()
 
         messages.success(request, 'Your Account has benn successfully created.')
+
+        # Welcome Email
+        subject = "Welcome to Django Project!"
+        message = "Hello" + myuser.first_name + "! " \
+                                                "\n" + "Welcome to Django Project! " \
+                                                "\n Thank You for visiting our website. " \
+                                                       "\n We have also sent you a confirmation email." \
+                                                       "\n Please confirm your email address " \
+                                                       "in order to activate your account. \n\n " \
+                                                       "Thank You!"
+        from_email = settings.EMAIL_HOST_USER
+        to_list = [myuser.email]
+        send_mail(subject, message, from_email, to_list, fail_silently=True)
+
         return redirect('signin')
 
     return render(request, 'authentication/signup.html')
