@@ -3,7 +3,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
-from users_django_project import settings
+from users_django_project.users_django_project import settings
 
 # Create your views here.
 
@@ -46,7 +46,8 @@ def signup(request):
 
         myuser.save()
 
-        messages.success(request, 'Your Account has benn successfully created.')
+        messages.success(request, 'Your Account has benn successfully created. We have sent a confirmation email, '
+                                  'please confirm your email in order to activate your account.')
 
         # Welcome Email
         subject = "Welcome to Django Project!"
