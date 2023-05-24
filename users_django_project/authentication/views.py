@@ -8,7 +8,7 @@ from django.conf import settings
 
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 # from users_django_project.authentication.tokens import generate_token
 from . tokens import generate_token
 
@@ -116,3 +116,18 @@ def signout(request):
     logout(request)
     messages.success(request, 'Logged Out Successfully!')
     return redirect('home')
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        myuser = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        myuser = None
+
+    if myuser is not None and generate_token.check_token(myuser, token):
+        myuser.is_active = True
+        myuser.save()
+        login(request, myuser)
+        return redirect('home')
+    else:
+        return render(request, 'activation_failed.html')
